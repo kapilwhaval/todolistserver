@@ -10,7 +10,11 @@ exports.createUser = (query) => {
     return User.create(query)
         .then(user => {
             if (!user) throw ({ message: 'Error creating user!' });
-            else return user;
+            else {
+                user.encry_password = undefined;
+                user.salt = undefined;
+                return user
+            }
         })
         .catch(err => { throw err })
 }

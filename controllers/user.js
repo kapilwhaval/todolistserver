@@ -8,7 +8,10 @@ exports.signup = (req, res) => {
             if (!user) { return createUser(req.body) }
             else throw ({ message: 'Account already exist with this email' });
         })
-        .then(newuser => res.status(200).send(newuser))
+        .then(newuser => {
+            let token = jwt.sign({ id: newuser._id }, 'opejfdvnsdflksdfoiseflksndflk');
+            return res.status(200).send({ message: 'Login Successful!', user: newuser, token })
+        })
         .catch(err => res.status(400).send(err))
 }
 
