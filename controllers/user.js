@@ -10,7 +10,7 @@ exports.signup = (req, res) => {
         })
         .then(newuser => {
             let token = jwt.sign({ id: newuser._id }, 'opejfdvnsdflksdfoiseflksndflk');
-            return res.status(200).send({ message: 'Login Successful!', user: newuser, token })
+            return res.status(200).send({ message: 'Account Created Successfully!', user: newuser, token })
         })
         .catch(err => res.status(400).send(err))
 }
