@@ -5,21 +5,16 @@ const { v4 } = require('uuid');
 const userSchema = new mongoose.Schema({
     avatar: String,
     first_name: {
-        type: String,
+        type: Object,
         required: true,
-        maxlength: 20,
-        trim: true
     },
     last_name: {
-        type: String,
+        type: Object,
         required: true,
-        maxlength: 20,
-        trim: true
     },
     email: {
-        type: String,
+        type: Object,
         required: true,
-        trim: true
     },
     encry_password: String,
     device_token: String,

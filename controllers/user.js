@@ -1,28 +1,29 @@
 const User = require('../models/user');
 const jwt = require("jsonwebtoken");
 const { getUser, createUser } = require('../services/user');
+const { encrypt } = require('../utils/encry-decry');
 
 exports.signup = (req, res) => {
-    getUser({ email: req.body.email })
+    getUser({ email: encrypt(req.body.email) })
         .then(user => {
             if (!user) { return createUser(req.body) }
             else throw ({ message: 'Account already exist with this email' });
         })
         .then(newuser => {
-            let token = jwt.sign({ id: newuser._id }, 'opejfdvnsdflksdfoiseflksndflk');
+            let token = jwt.sign({ id: newuser._id }, process.env.TOKEN_SECRET);
             return res.status(200).send({ message: 'Account Created Successfully!', user: newuser, token })
         })
         .catch(err => res.status(400).send(err))
 }
 
 exports.login = (req, res) => {
-    getUser({ email: req.body.email })
+    getUser({ email: encrypt(req.body.email) })
         .then(user => {
             if (user) {
                 if (user.authenticate(req.body.password)) {
                     user.salt = undefined;
                     user.encry_password = undefined;
-                    let token = jwt.sign({ id: user._id }, 'opejfdvnsdflksdfoiseflksndflk');
+                    let token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET);
                     return res.status(200).send({ message: 'Login Successful!', user: user, token })
                 }
                 else throw ({ status: 400, message: 'Invalid email or password' });
